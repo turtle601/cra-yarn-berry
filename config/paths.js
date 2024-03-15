@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 const getPublicUrlOrPath = require('react-dev-utils/getPublicUrlOrPath');
+const isYarnBerry = require("./isYarnBerry");
 
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebook/create-react-app/issues/637
@@ -65,9 +66,9 @@ module.exports = {
   yarnLockFile: resolveApp('yarn.lock'),
   testsSetup: resolveModule(resolveApp, 'src/setupTests'),
   proxySetup: resolveApp('src/setupProxy.js'),
-  appNodeModules: resolveApp('node_modules'),
-  appWebpackCache: resolveApp('node_modules/.cache'),
-  appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
+  appNodeModules: resolveApp(isYarnBerry() ? '../.yarn' : 'node_modules'),
+  appWebpackCache: resolveApp(isYarnBerry() ? '../.yarn/cache' : 'node_modules/.cache'),
+  appTsBuildInfoFile: resolveApp(isYarnBerry() ? '../.yarn/cache/tsconfig.tsbuildinfo' : 'node_modules/.cache/tsconfig.tsbuildinfo'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
 };

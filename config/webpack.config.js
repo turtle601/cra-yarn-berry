@@ -27,6 +27,7 @@ const ForkTsCheckerWebpackPlugin =
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const isYarnBerry = require("./isYarnBerry");
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -428,7 +429,7 @@ module.exports = function (webpackEnv) {
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
                 // directory for faster rebuilds.
-                cacheDirectory: true,
+                cacheDirectory: isYarnBerry() ? path.dirname('../.yarn/cache') : true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
                 compact: isEnvProduction,
@@ -450,7 +451,7 @@ module.exports = function (webpackEnv) {
                     { helpers: true },
                   ],
                 ],
-                cacheDirectory: true,
+                cacheDirectory: isYarnBerry() ? path.dirname('../.yarn/cache') : true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
                 
@@ -733,7 +734,7 @@ module.exports = function (webpackEnv) {
           cache: true,
           cacheLocation: path.resolve(
             paths.appNodeModules,
-            '.cache/.eslintcache'
+            isYarnBerry() ? 'cache/.eslintcache' :'.cache/.eslintcache'
           ),
           // ESLint class options
           cwd: paths.appPath,
